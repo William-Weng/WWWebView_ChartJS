@@ -1,0 +1,15 @@
+{
+  "originHash" : "4d61ea28bf8d791b107708f27981b7f27eef95b59cd53a166e271fbc461d7991",
+  "pins" : [
+    {
+      "identity" : "wwwebview_chartjs",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/William-Weng/WWWebView_ChartJS",
+      "state" : {
+        "revision" : "dd877602e066bd547e719412f65a6a0cf3a6ed59",
+        "version" : "0.5.0"
+      }
+    }
+  ],
+  "version" : 3
+}
