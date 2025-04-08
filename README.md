@@ -11,7 +11,7 @@
 ### [Installation with Swift Package Manager](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/使用-spm-安裝第三方套件-xcode-11-新功能-2c4ffcf85b4b)
 ```
 dependencies: [
-    .package(url: "https://github.com/William-Weng/WWWebView_ChartJS.git", .upToNextMajor(from: "0.5.0"))
+    .package(url: "https://github.com/William-Weng/WWWebView_ChartJS.git", .upToNextMajor(from: "0.5.1"))
 ]
 ```
 
@@ -20,6 +20,13 @@ dependencies: [
 |-|-|
 |configure(delegate:chartType:defaultColor:isUseGrid:)|相關設定|
 |reloadData()|重新載入資料|
+
+## WWWebView.ChartJS.Delegate
+|函式|功能|
+|-|-|
+|chartValues(view:)|取得表格數據|
+|chartView(_:didTouched:)|點到哪一個數據|
+|chartView(_:status:)|表格狀態|
 
 ## [Example](https://ezgif.com/video-to-webp)
 ```swift
