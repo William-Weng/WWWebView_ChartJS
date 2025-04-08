@@ -1,0 +1,219 @@
+//
+//  ChartJS.swift
+//  WWWebView_ChartJS
+//
+//  Created by William.Weng on 2025/4/8.
+//
+
+import UIKit
+import WebKit
+
+// MARK: - WWWebView
+open class WWWebView {}
+
+// MARK: - [WWWebView.ChartJS](https://cdnjs.com/libraries/Chart.js)
+public extension WWWebView {
+    
+    open class ChartJS: UIView {
+        
+        @IBOutlet var contentView: UIView!
+        @IBOutlet weak var webView: WKWebView!
+        
+        public weak var delegate: Delegate?
+        
+        private var colorHexString = "#00FFFF66"
+        private var isUseGrid = true
+        private var chartType: ChartType = .bar
+        
+        override public init(frame: CGRect) {
+            super.init(frame: frame)
+            initViewFromXib()
+        }
+        
+        required public init?(coder aDecoder: NSCoder) {
+            super.init(coder: aDecoder)
+            initViewFromXib()
+        }
+        
+        deinit {
+            delegate = nil
+        }
+    }
+}
+
+// MARK: - WKNavigationDelegate
+extension WWWebView.ChartJS: WKNavigationDelegate {}
+public extension WWWebView.ChartJS {
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        guard let chartValues = delegate?.chartValues(view: self) else { return }
+        initChart(with: webView, chartType: chartType, isUseGrid: isUseGrid, chartValues: chartValues)
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
+        return await webViewAction(webView, decidePolicyFor: navigationAction)
+    }
+}
+
+// MARK: - 公開函式
+public extension WWWebView.ChartJS {
+    
+    /// [相關設定](https://www.chartjs.org/docs/latest/getting-started/)
+    /// - Parameters:
+    ///   - delegate: Delegate?
+    ///   - chartType: 圖表樣式
+    ///   - defaultColor: 預設顏色
+    func configure(delegate: Delegate?, chartType: ChartType = .bar, defaultColor: UIColor? = nil, isUseGrid: Bool = true) {
+        
+        if let defaultColor { colorHexString = defaultColor._hexString() ?? "#00FFFF66" }
+        
+        self.delegate = delegate
+        self.chartType = chartType
+        self.isUseGrid = isUseGrid
+        
+        loadHTML("index.html")
+    }
+    
+    /// [重新載入資料](https://chartjs.bootcss.com/docs/getting-started/installation.html)
+    func reloadData() {
+        reloadDataAction(webView: webView)
+    }
+}
+
+// MARK: - 小工具
+private extension WWWebView.ChartJS {
+    
+    /// [讀取Nib畫面 => 加到View上面](https://blog.twjoin.com/ios-view-更新-從-setneedsdisplay-到-layoutsubviews-2e673359ccac)
+    func initViewFromXib() {
+        
+        let bundle = Bundle.module
+        let name = String(describing: WWWebView.ChartJS.self)
+        
+        bundle.loadNibNamed(name, owner: self, options: nil)
+        contentView.frame = bounds
+        
+        addSubview(contentView)
+    }
+    
+    /// WebView載入HTML
+    /// - Parameter filename: HTML檔案名稱
+    func loadHTML(_ filename: String) {
+        
+        let result = webView._loadFile(filename: filename, bundle: .module, inSubDirectory: "HTML")
+        
+        webView.navigationDelegate = self
+        webView.backgroundColor = .clear
+        webView.scrollView.backgroundColor = .clear
+        webView.isHidden = true
+        webView.isOpaque = false
+        
+        switch result {
+        case .failure(let error): delegate?.chartView(self, status: .failure(error))
+        case .success(let action): delegate?.chartView(self, status: .success(.loadHTML(action)))
+        }
+    }
+    
+    /// 初始化圖表
+    /// - Parameters:
+    ///   - webView: WKWebView
+    ///   - chartType: 圖表樣式
+    ///   - isUseGrid: 是否使用框線
+    ///   - chartValues: 數值
+    func initChart(with webView: WKWebView, chartType: ChartType, isUseGrid: Bool, chartValues: [ChartValue]) {
+        initChart(webView: webView, chartType: chartType.rawValue, isUseGrid: isUseGrid, chartValues: chartValues)
+    }
+    
+    /// 初始化圖表
+    /// - Parameters:
+    ///   - webView: WKWebView
+    ///   - chartType: 圖表樣式
+    ///   - isUseGrid: 是否使用框線
+    ///   - chartValues: 數值
+    func initChart(webView: WKWebView, chartType: String, isUseGrid: Bool, chartValues: [ChartValue]) {
+        
+        let labels = chartValues.map { $0.key }
+        let values = chartValues.map { $0.value }
+        let colors = chartValues.map { $0.color?._hexString() ?? colorHexString }
+        let dataString = values.map { String($0) }.joined(separator: ", ")
+        
+        let jsCode = """
+            window.initChart('\(chartType)', \(labels), \(isUseGrid))
+            window.reloadData(\(labels), [\(dataString)], \(colors))
+        """
+        
+        webView.isHidden = false
+        
+        webView._evaluateJavaScript(script: jsCode) { [weak self] result in
+            
+            guard let this = self else { return }
+            
+            switch result {
+            case .failure(let error): this.delegate?.chartView(this, status: .failure(error))
+            case .success(let value): this.delegate?.chartView(this, status: .success(.initChart(value)))
+            }
+        }
+    }
+    
+    /// 重新載入資料
+    /// - Parameter webView: WKWebView
+    func reloadDataAction(webView: WKWebView) {
+        
+        guard let chartValues = delegate?.chartValues(view: self) else { return }
+        
+        let labels = chartValues.map { $0.key }
+        let values = chartValues.map { $0.value }
+        let colors = chartValues.map { $0.color?._hexString() ?? colorHexString }
+        let dataString = values.map { String($0) }.joined(separator: ", ")
+
+        let jsCode = """
+            window.reloadData(\(labels), [\(dataString)], \(colors))
+        """
+        
+        webView._evaluateJavaScript(script: jsCode) { [weak self] result in
+            
+            guard let this = self else { return }
+            
+            switch result {
+            case .failure(let error): this.delegate?.chartView(this, status: .failure(error))
+            case .success(let value): this.delegate?.chartView(this, status: .success(.reloadData(value)))
+            }
+        }
+    }
+    
+    /// 處理點擊的數據回傳
+    /// - Parameters:
+    ///   - webView: WKWebView
+    ///   - navigationAction: WKNavigationAction
+    /// - Returns: WKNavigationActionPolicy
+    func webViewAction(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
+        
+        guard let url = navigationAction.request.url,
+              let urlScheme = url.scheme,
+              let urlHost = url.host,
+              let scheme = CustomUrlScheme(rawValue: urlScheme),
+              let host = CustomUrlHost(rawValue: urlHost)
+        else {
+            return .allow
+        }
+        
+        switch (scheme, host) {
+        case (.app, .itemTouched):
+            
+            let component = url.lastPathComponent
+            let array = component.split(separator: ",")
+            
+            guard array.count == 2,
+                  let first = array.first,
+                  let last = array.last,
+                  let section = Int(first),
+                  let row = Int(last)
+            else {
+                return .cancel
+            }
+            
+            delegate?.chartView(self, didTouched: IndexPath(row: row, section: section))
+        }
+        
+        return .cancel
+    }
+}
