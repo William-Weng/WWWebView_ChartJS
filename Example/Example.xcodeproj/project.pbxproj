@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		81174D912DA50A0A00E8C441 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81174D902DA50A0A00E8C441 /* WWWebView_ChartJS */; };
-		81174D972DA50F3200E8C441 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81174D962DA50F3200E8C441 /* WWWebView_ChartJS */; };
-		81174D9A2DA50F9800E8C441 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81174D992DA50F9800E8C441 /* WWWebView_ChartJS */; };
 		817567FC2CA2C2B400B24577 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817567FB2CA2C2B400B24577 /* AppDelegate.swift */; };
 		817568002CA2C2B400B24577 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817567FF2CA2C2B400B24577 /* ViewController.swift */; };
 		817568032CA2C2B400B24577 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 817568012CA2C2B400B24577 /* Main.storyboard */; };
@@ -17,7 +14,9 @@
 		817568082CA2C2B500B24577 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 817568062CA2C2B500B24577 /* LaunchScreen.storyboard */; };
 		817568142CA2C33600B24577 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817568122CA2C33600B24577 /* Constant.swift */; };
 		817568152CA2C33600B24577 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817568132CA2C33600B24577 /* Extension.swift */; };
+		81A9EB202DA6458100969BF9 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81A9EB1F2DA6458100969BF9 /* WWWebView_ChartJS */; };
 		81D0D67D2DA4C13C009AE0E0 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81D0D67C2DA4C13C009AE0E0 /* WWWebView_ChartJS */; };
+		81F23EC62DA60561006F5B51 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81F23EC52DA60561006F5B51 /* WWWebView_ChartJS */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,9 +36,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81174D912DA50A0A00E8C441 /* WWWebView_ChartJS in Frameworks */,
-				81174D972DA50F3200E8C441 /* WWWebView_ChartJS in Frameworks */,
-				81174D9A2DA50F9800E8C441 /* WWWebView_ChartJS in Frameworks */,
+				81F23EC62DA60561006F5B51 /* WWWebView_ChartJS in Frameworks */,
+				81A9EB202DA6458100969BF9 /* WWWebView_ChartJS in Frameworks */,
 				81D0D67D2DA4C13C009AE0E0 /* WWWebView_ChartJS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -51,6 +49,7 @@
 			isa = PBXGroup;
 			children = (
 				817567FA2CA2C2B400B24577 /* Example */,
+				81F23EC72DA60710006F5B51 /* Frameworks */,
 				817567F92CA2C2B400B24577 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -118,6 +117,13 @@
 			name = Setting;
 			sourceTree = "<group>";
 		};
+		81F23EC72DA60710006F5B51 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -136,9 +142,8 @@
 			name = Example;
 			packageProductDependencies = (
 				81D0D67C2DA4C13C009AE0E0 /* WWWebView_ChartJS */,
-				81174D902DA50A0A00E8C441 /* WWWebView_ChartJS */,
-				81174D962DA50F3200E8C441 /* WWWebView_ChartJS */,
-				81174D992DA50F9800E8C441 /* WWWebView_ChartJS */,
+				81F23EC52DA60561006F5B51 /* WWWebView_ChartJS */,
+				81A9EB1F2DA6458100969BF9 /* WWWebView_ChartJS */,
 			);
 			productName = Example;
 			productReference = 817567F82CA2C2B400B24577 /* Example.app */;
@@ -169,7 +174,7 @@
 			);
 			mainGroup = 817567EF2CA2C2B400B24577;
 			packageReferences = (
-				81174D982DA50F9800E8C441 /* XCRemoteSwiftPackageReference "WWWebView_ChartJS" */,
+				81A9EB1E2DA6458100969BF9 /* XCRemoteSwiftPackageReference "WWWebView_ChartJS" */,
 			);
 			productRefGroup = 817567F92CA2C2B400B24577 /* Products */;
 			projectDirPath = "";
@@ -436,31 +441,27 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		81174D982DA50F9800E8C441 /* XCRemoteSwiftPackageReference "WWWebView_ChartJS" */ = {
+		81A9EB1E2DA6458100969BF9 /* XCRemoteSwiftPackageReference "WWWebView_ChartJS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/William-Weng/WWWebView_ChartJS";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.1;
+				minimumVersion = 0.5.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		81174D902DA50A0A00E8C441 /* WWWebView_ChartJS */ = {
+		81A9EB1F2DA6458100969BF9 /* WWWebView_ChartJS */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = WWWebView_ChartJS;
-		};
-		81174D962DA50F3200E8C441 /* WWWebView_ChartJS */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = WWWebView_ChartJS;
-		};
-		81174D992DA50F9800E8C441 /* WWWebView_ChartJS */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 81174D982DA50F9800E8C441 /* XCRemoteSwiftPackageReference "WWWebView_ChartJS" */;
+			package = 81A9EB1E2DA6458100969BF9 /* XCRemoteSwiftPackageReference "WWWebView_ChartJS" */;
 			productName = WWWebView_ChartJS;
 		};
 		81D0D67C2DA4C13C009AE0E0 /* WWWebView_ChartJS */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WWWebView_ChartJS;
+		};
+		81F23EC52DA60561006F5B51 /* WWWebView_ChartJS */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WWWebView_ChartJS;
 		};

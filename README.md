@@ -11,7 +11,7 @@
 ### [Installation with Swift Package Manager](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/使用-spm-安裝第三方套件-xcode-11-新功能-2c4ffcf85b4b)
 ```
 dependencies: [
-    .package(url: "https://github.com/William-Weng/WWWebView_ChartJS.git", .upToNextMajor(from: "0.5.1"))
+    .package(url: "https://github.com/William-Weng/WWWebView_ChartJS.git", .upToNextMajor(from: "0.5.2"))
 ]
 ```
 
@@ -20,22 +20,27 @@ dependencies: [
 |-|-|
 |configure(delegate:chartType:defaultColor:isUseGrid:)|相關設定|
 |reloadData()|重新載入資料|
+|reload()|重新載入網頁|
+|resize()|重新設定畫面大小|
+
 
 ## WWWebView.ChartJS.Delegate
 |函式|功能|
 |-|-|
 |chartValues(view:)|取得表格數據|
-|chartView(_:didTouched:)|點到哪一個數據|
-|chartView(_:status:)|表格狀態|
+|chartViewStatus(_ view:result:)|表格狀態|
+|chartViewEvent(_ view:result:)|表格事件|
 
 ## [Example](https://ezgif.com/video-to-webp)
 ```swift
 import UIKit
 import WWWebView_ChartJS
 
+class MyChartJS: WWWebView.ChartJS {}
+
 final class ViewController: UIViewController {
-        
-    private var webView: WWWebView.ChartJS!
+    
+    @IBOutlet weak var webView: MyChartJS!
     
     private var chartValues: [WWWebView.ChartJS.ChartValue] = [
         (key: "Red", value: 15.0, color: nil),
@@ -45,12 +50,9 @@ final class ViewController: UIViewController {
         (key: "Purple", value: 12.0, color: .purple.withAlphaComponent(0.5)),
         (key: "Orange", value: 10.4, color: .orange.withAlphaComponent(0.7)),
     ]
-    
-    @IBAction func initChart(_ sender: UIBarButtonItem) {
         
-        webView = WWWebView.ChartJS.init(frame: view.bounds)
+    @IBAction func initChart(_ sender: UIBarButtonItem) {
         webView.configure(delegate: self)
-        view.addSubview(webView)
     }
     
     @IBAction func reloadData(_ sender: UIBarButtonItem) {
@@ -71,13 +73,25 @@ extension ViewController: WWWebView.ChartJS.Delegate {
     func chartValues(view: WWWebView.ChartJS) -> [WWWebView.ChartJS.ChartValue] {
         return chartValues
     }
-    
-    func chartView(_ view: WWWebView.ChartJS, didTouched indexPath: IndexPath) {
-        title = chartValues[indexPath.row].key
+        
+    func chartViewStatus(_ view: WWWebView.ChartJS, result: Result<WWWebView.ChartJS.Status, Error>) {
+        
+        switch result {
+        case .failure(let error): print(error)
+        case .success(let status): print(status)
+        }
     }
     
-    func chartView(_ view: WWWebView.ChartJS, status: Result<WWWebView.ChartJS.Status, Error>) {
-        print(status)
+    func chartViewEvent(_ view: WWWebView.ChartJS, result: Result<WWWebView.ChartJS.Event, any Error>) {
+        
+        switch result {
+        case .failure(let error): print(error)
+        case .success(let event):
+            switch event {
+            case .itemTouched(let indexPath): title = chartValues[indexPath.row].key
+            case .orientationChange: view.reload()
+            }
+        }
     }
 }
 ```

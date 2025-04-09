@@ -12,7 +12,7 @@ import WebKit
 open class WWWebView {}
 
 // MARK: - [WWWebView.ChartJS](https://cdnjs.com/libraries/Chart.js)
-public extension WWWebView {
+extension WWWebView {
     
     open class ChartJS: UIView {
         
@@ -73,10 +73,21 @@ public extension WWWebView.ChartJS {
         
         loadHTML("index.html")
     }
-    
+        
     /// [重新載入資料](https://chartjs.bootcss.com/docs/getting-started/installation.html)
     func reloadData() {
         reloadDataAction(webView: webView)
+    }
+    
+    /// 重新載入網頁
+    func reload() {
+        webView.reload()
+        delegate?.chartViewStatus(self, result: .success(.reload))
+    }
+    
+    /// 重新設定畫面大小
+    func resize() {
+        resizeAction(webView: webView)
     }
 }
 
@@ -108,8 +119,8 @@ private extension WWWebView.ChartJS {
         webView.isOpaque = false
         
         switch result {
-        case .failure(let error): delegate?.chartView(self, status: .failure(error))
-        case .success(let action): delegate?.chartView(self, status: .success(.loadHTML(action)))
+        case .failure(let error): delegate?.chartViewStatus(self, result: .failure(error))
+        case .success(let action): delegate?.chartViewStatus(self, result: .success(.loadHTML(action)))
         }
     }
     
@@ -148,8 +159,8 @@ private extension WWWebView.ChartJS {
             guard let this = self else { return }
             
             switch result {
-            case .failure(let error): this.delegate?.chartView(this, status: .failure(error))
-            case .success(let value): this.delegate?.chartView(this, status: .success(.initChart(value)))
+            case .failure(let error): this.delegate?.chartViewStatus(this, result: .failure(error))
+            case .success(let value): this.delegate?.chartViewStatus(this, result: .success(.initChart(value)))
             }
         }
     }
@@ -174,11 +185,34 @@ private extension WWWebView.ChartJS {
             guard let this = self else { return }
             
             switch result {
-            case .failure(let error): this.delegate?.chartView(this, status: .failure(error))
-            case .success(let value): this.delegate?.chartView(this, status: .success(.reloadData(value)))
+            case .failure(let error): this.delegate?.chartViewStatus(this, result: .failure(error))
+            case .success(let value): this.delegate?.chartViewStatus(this, result: .success(.reloadData(value)))
             }
         }
     }
+    
+    /// 重新設定畫面大小
+    /// - Parameter webView: WKWebView
+    func resizeAction(webView: WKWebView) {
+        
+        let jsCode = """
+            window.resize()
+        """
+        
+        webView._evaluateJavaScript(script: jsCode) { [weak self] result in
+            
+            guard let this = self else { return }
+            
+            switch result {
+            case .failure(let error): this.delegate?.chartViewStatus(this, result: .failure(error))
+            case .success(let value): this.delegate?.chartViewStatus(this, result: .success(.resize))
+            }
+        }
+    }
+}
+
+// MARK: - 圖表功能
+private extension WWWebView.ChartJS {
     
     /// 處理點擊的數據回傳
     /// - Parameters:
@@ -197,22 +231,38 @@ private extension WWWebView.ChartJS {
         }
         
         switch (scheme, host) {
-        case (.app, .itemTouched):
-            
-            let component = url.lastPathComponent
-            let array = component.split(separator: ",")
-            
-            guard array.count == 2,
-                  let first = array.first,
-                  let last = array.last,
-                  let section = Int(first),
-                  let row = Int(last)
-            else {
-                return .cancel
-            }
-            
-            delegate?.chartView(self, didTouched: IndexPath(row: row, section: section))
+        case (.app, .itemTouched): return itemTouchedAction(with: url)
+        case (.app, .orientationChange): return orientationChangeAction()
         }
+        
+        return .cancel
+    }
+    
+    /// 畫面旋轉事件處理 => app://itemTouched/${section},${row}
+    func orientationChangeAction() -> WKNavigationActionPolicy {
+        delegate?.chartViewEvent(self, result: .success(.orientationChange))
+        return .cancel
+    }
+    
+    /// 項目被點擊的事件處理 => app://itemTouched/${section},${row}
+    /// - Parameter url: URL
+    /// - Returns: WKNavigationActionPolicy
+    func itemTouchedAction(with url: URL) -> WKNavigationActionPolicy {
+        
+        let component = url.lastPathComponent
+        let array = component.split(separator: ",")
+        
+        guard array.count == 2,
+              let first = array.first,
+              let last = array.last,
+              let section = Int(first),
+              let row = Int(last)
+        else {
+            return .cancel
+        }
+        
+        let indexPath = IndexPath(row: row, section: section)
+        delegate?.chartViewEvent(self, result: .success(.itemTouched(indexPath)))
         
         return .cancel
     }

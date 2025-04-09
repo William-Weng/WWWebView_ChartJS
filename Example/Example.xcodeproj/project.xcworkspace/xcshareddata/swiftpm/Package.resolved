@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/William-Weng/WWWebView_ChartJS",
       "state" : {
-        "revision" : "dd877602e066bd547e719412f65a6a0cf3a6ed59",
-        "version" : "0.5.0"
+        "revision" : "eb4f593dd9e16d131cd72cad9e164f1188a69a53",
+        "version" : "0.5.1"
       }
     }
   ],

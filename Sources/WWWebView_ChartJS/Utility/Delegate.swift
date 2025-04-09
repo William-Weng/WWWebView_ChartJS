@@ -16,17 +16,17 @@ public extension WWWebView.ChartJS {
         /// - Parameter view: WWWebView.ChartJS
         /// - Returns: [ChartValue]
         func chartValues(view: WWWebView.ChartJS) -> [ChartValue]
-        
-        /// 點到哪一個數據
-        /// - Parameters:
-        ///   - view: WWWebView.ChartJS
-        ///   - indexPath: IndexPath
-        func chartView(_ view: WWWebView.ChartJS, didTouched indexPath: IndexPath)
-        
+                
         /// 表格狀態
         /// - Parameters:
         ///   - view: WWWebView.ChartJS
-        ///   - status: Result<Status, Error>
-        func chartView(_ view: WWWebView.ChartJS, status: Result<Status, Error>)
+        ///   - statusResult: Result<Status, Error>
+        func chartViewStatus(_ view: WWWebView.ChartJS, result: Result<Status, Error>)
+        
+        /// 表格事件
+        /// - Parameters:
+        ///   - view: WWWebView.ChartJS
+        ///   - statusResult: Result<Event, Error>
+        func chartViewEvent(_ view: WWWebView.ChartJS, result: Result<Event, Error>)
     }
 }

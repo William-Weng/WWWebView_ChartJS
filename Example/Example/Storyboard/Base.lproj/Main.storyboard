@@ -8,15 +8,30 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Chart.js-->
+        <!--ViewController-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" userLabel="ViewController" customClass="ViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rKf-Bg-gpV" customClass="MyChartJS" customModule="Example" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="rKf-Bg-gpV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="0Iz-8m-xJ6"/>
+                            <constraint firstItem="rKf-Bg-gpV" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Si3-HB-P3W"/>
+                            <constraint firstItem="rKf-Bg-gpV" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Sid-Kb-Nf5"/>
+                            <constraint firstItem="rKf-Bg-gpV" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="YVQ-xG-WPb"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="rKf-Bg-gpV" secondAttribute="bottom" id="cJu-14-Aix"/>
+                            <constraint firstItem="rKf-Bg-gpV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="fkl-CI-NDA"/>
+                            <constraint firstItem="rKf-Bg-gpV" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="xe0-Ln-af3"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Chart.js" id="ASc-YT-plj">
                         <rightBarButtonItems>
@@ -32,6 +47,9 @@
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
+                    <connections>
+                        <outlet property="chartView" destination="rKf-Bg-gpV" id="Grm-Qh-maa"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

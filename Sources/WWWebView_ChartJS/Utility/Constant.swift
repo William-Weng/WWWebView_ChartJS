@@ -26,21 +26,34 @@ public extension WWWebView.ChartJS {
 // MARK: - enum
 public extension WWWebView.ChartJS {
     
+    /// 表格樣式
     enum ChartType: String {
         case bar
     }
     
+    /// 自定義的狀態名稱
     enum Status {
-        case loadHTML(_ action: WKNavigation?)
-        case initChart(_ value: Any?)
-        case reloadData(_ value: Any?)
+        case loadHTML(_ action: WKNavigation?)      // 載入HTML文件
+        case initChart(_ value: Any?)               // 初始化表格
+        case reloadData(_ value: Any?)              // 更新數據資料
+        case reload                                 // 重新載入HTML
+        case resize                                 // 更新尺寸
     }
     
+    /// 自定義的事件名稱 => app://<event>/<value>
+    enum Event {
+        case itemTouched(_ indexPath: IndexPath)    // 圖表項目被點 => app://itemTouched/${section},${row}
+        case orientationChange                      // 手機畫面旋轉 => app://orientationChange/
+    }
+    
+    /// 自定義功能代號 => app://<event>/<value>
     enum CustomUrlScheme: String {
-        case app            // app://
+        case app
     }
     
+    /// 自定義的事件名稱 => app://<event>/<value>
     enum CustomUrlHost: String {
-        case itemTouched    // app://itemTouched/${section},${row}
+        case itemTouched
+        case orientationChange
     }
 }

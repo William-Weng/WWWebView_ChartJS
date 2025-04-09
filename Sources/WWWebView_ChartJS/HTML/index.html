@@ -10,6 +10,21 @@
   <div><canvas id="jsChart"></canvas></div>
   <script src="chart.js"></script>
   <script src="run.js"></script>
+
+<script>
+     const portrait = window.matchMedia("(orientation: portrait)");
+
+  // 監聽方向變化
+  portrait.addEventListener("change", function(e) {
+    if(e.matches) {
+      console.log("現在是縱向模式");
+    } else {
+      console.log("現在是橫向模式");
+    }
+    mobileProtocol(`app://itemTouched/${e.matches},${row}`)
+});
+</script>
+
 </body>
 
 </html>

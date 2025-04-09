@@ -9,7 +9,7 @@ function initChart(type, labels, isUseGrid) {
 
     let element = document.getElementById('jsChart');
     let gridLineWidth = isUseGrid ? 1.0 : 0.0
-
+    
     new Chart(element, {
         type: type,
         data: {
@@ -46,7 +46,7 @@ function initChart(type, labels, isUseGrid) {
             }
         }
     })
-
+    
     return true
 }
 
@@ -69,6 +69,23 @@ function reloadData(labels, data, backgroundColor) {
 }
 
 /**
+ * @function resize
+ * @description 重新設定畫面大小
+*/
+function resize() {
+    let jsChart = Chart.getChart('jsChart')
+    jsChart.resize()
+}
+
+/**
+ * @function notificationOrientationChange
+ * @description 通知畫面旋轉
+*/
+function notificationOrientationChange() {
+    mobileProtocol("app://orientationChange")
+}
+
+/**
  * @function mobileProtocol
  * @description 傳輸自定義的Protocol
  * @param src - 自定義的URL (.src = app://downloadFile)
@@ -80,10 +97,14 @@ function mobileProtocol(src) {
     iframe.src = src
     iframe.style.display = "none"
     document.body.appendChild(iframe)
-
+    
     iframe.remove()
+}
+
+window.onload = () => {
+    window.addEventListener('orientationchange', notificationOrientationChange);
 }
 
 window.initChart = initChart
 window.reloadData = reloadData
-window.demoChart = demoChart
+window.resize = resize

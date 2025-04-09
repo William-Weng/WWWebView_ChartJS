@@ -8,10 +8,12 @@
 import UIKit
 import WWWebView_ChartJS
 
+class MyChartJS: WWWebView.ChartJS {}
+
 // MARK: - ViewController
 final class ViewController: UIViewController {
-        
-    private var webView: WWWebView.ChartJS!
+    
+    @IBOutlet weak var chartView: MyChartJS!
     
     private var chartValues: [WWWebView.ChartJS.ChartValue] = [
         (key: "Red", value: 15.0, color: nil),
@@ -21,12 +23,9 @@ final class ViewController: UIViewController {
         (key: "Purple", value: 12.0, color: .purple.withAlphaComponent(0.5)),
         (key: "Orange", value: 10.4, color: .orange.withAlphaComponent(0.7)),
     ]
-    
-    @IBAction func initChart(_ sender: UIBarButtonItem) {
         
-        webView = WWWebView.ChartJS.init(frame: view.bounds)
-        webView.configure(delegate: self)
-        view.addSubview(webView)
+    @IBAction func initChart(_ sender: UIBarButtonItem) {
+        chartView.configure(delegate: self)
     }
     
     @IBAction func reloadData(_ sender: UIBarButtonItem) {
@@ -38,7 +37,7 @@ final class ViewController: UIViewController {
             (key: "Purple", value: 13.6, color: .purple),
         ]
         
-        webView.reloadData()
+        chartView.reloadData()
     }
 }
 
@@ -48,12 +47,24 @@ extension ViewController: WWWebView.ChartJS.Delegate {
     func chartValues(view: WWWebView.ChartJS) -> [WWWebView.ChartJS.ChartValue] {
         return chartValues
     }
-    
-    func chartView(_ view: WWWebView.ChartJS, didTouched indexPath: IndexPath) {
-        title = chartValues[indexPath.row].key
+        
+    func chartViewStatus(_ view: WWWebView.ChartJS, result: Result<WWWebView.ChartJS.Status, Error>) {
+        
+        switch result {
+        case .failure(let error): print(error)
+        case .success(let status): print(status)
+        }
     }
     
-    func chartView(_ view: WWWebView.ChartJS, status: Result<WWWebView.ChartJS.Status, Error>) {
-        print(status)
+    func chartViewEvent(_ view: WWWebView.ChartJS, result: Result<WWWebView.ChartJS.Event, any Error>) {
+        
+        switch result {
+        case .failure(let error): print(error)
+        case .success(let event):
+            switch event {
+            case .itemTouched(let indexPath): title = chartValues[indexPath.row].key
+            case .orientationChange: view.reload()
+            }
+        }
     }
 }
