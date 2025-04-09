@@ -28,7 +28,9 @@ public extension WWWebView.ChartJS {
     
     /// 表格樣式
     enum ChartType: String {
-        case bar
+        case bar                                    // 柱狀圖
+        case pie                                    // 圓餅圖
+        case doughnut                               // 甜甜圈圖
     }
     
     /// 自定義的狀態名稱

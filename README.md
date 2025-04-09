@@ -11,18 +11,17 @@
 ### [Installation with Swift Package Manager](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/使用-spm-安裝第三方套件-xcode-11-新功能-2c4ffcf85b4b)
 ```
 dependencies: [
-    .package(url: "https://github.com/William-Weng/WWWebView_ChartJS.git", .upToNextMajor(from: "0.5.2"))
+    .package(url: "https://github.com/William-Weng/WWWebView_ChartJS.git", .upToNextMajor(from: "0.6.0"))
 ]
 ```
 
 ## [Function](https://ezgif.com/video-to-webp)
 |函式|功能|
 |-|-|
-|configure(delegate:chartType:defaultColor:isUseGrid:)|相關設定|
+|configure(delegate:chartType:defaultColor:)|相關設定|
 |reloadData()|重新載入資料|
 |reload()|重新載入網頁|
 |resize()|重新設定畫面大小|
-
 
 ## WWWebView.ChartJS.Delegate
 |函式|功能|
@@ -40,19 +39,27 @@ class MyChartJS: WWWebView.ChartJS {}
 
 final class ViewController: UIViewController {
     
-    @IBOutlet weak var webView: MyChartJS!
+    @IBOutlet weak var chartView: MyChartJS!
     
     private var chartValues: [WWWebView.ChartJS.ChartValue] = [
-        (key: "Red", value: 15.0, color: nil),
+        (key: "Red", value: 15.0, color: .red.withAlphaComponent(0.8)),
         (key: "Blue", value: 10.0, color: nil),
         (key: "Yellow", value: 5.5, color: .yellow),
         (key: "Green", value: 8.0, color: .green.withAlphaComponent(0.3)),
         (key: "Purple", value: 12.0, color: .purple.withAlphaComponent(0.5)),
         (key: "Orange", value: 10.4, color: .orange.withAlphaComponent(0.7)),
     ]
-        
-    @IBAction func initChart(_ sender: UIBarButtonItem) {
-        webView.configure(delegate: self)
+    
+    @IBAction func initBarChart(_ sender: UIBarButtonItem) {
+        chartView.configure(delegate: self, chartType: .bar)
+    }
+    
+    @IBAction func initPieChart(_ sender: UIBarButtonItem) {
+        chartView.configure(delegate: self, chartType: .pie)
+    }
+    
+    @IBAction func initDoughnutChart(_ sender: UIBarButtonItem) {
+        chartView.configure(delegate: self, chartType: .doughnut)
     }
     
     @IBAction func reloadData(_ sender: UIBarButtonItem) {
@@ -64,7 +71,7 @@ final class ViewController: UIViewController {
             (key: "Purple", value: 13.6, color: .purple),
         ]
         
-        webView.reloadData()
+        chartView.reloadData()
     }
 }
 
@@ -89,7 +96,7 @@ extension ViewController: WWWebView.ChartJS.Delegate {
         case .success(let event):
             switch event {
             case .itemTouched(let indexPath): title = chartValues[indexPath.row].key
-            case .orientationChange: view.reload()
+            case .orientationChange: view.resize()
             }
         }
     }

@@ -34,15 +34,27 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Chart.js" id="ASc-YT-plj">
-                        <rightBarButtonItems>
-                            <barButtonItem style="done" systemItem="action" id="dgO-a0-6mG">
-                                <connections>
-                                    <action selector="initChart:" destination="BYZ-38-t0r" id="03g-AO-AFQ"/>
-                                </connections>
-                            </barButtonItem>
+                        <leftBarButtonItems>
                             <barButtonItem style="done" systemItem="reply" id="ELP-jK-3C6">
                                 <connections>
                                     <action selector="reloadData:" destination="BYZ-38-t0r" id="NG4-1B-pLn"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem style="done" systemItem="action" id="WqY-QH-2gO">
+                                <connections>
+                                    <action selector="initDoughnutChart:" destination="BYZ-38-t0r" id="Jbe-MT-H8Z"/>
+                                </connections>
+                            </barButtonItem>
+                        </leftBarButtonItems>
+                        <rightBarButtonItems>
+                            <barButtonItem style="done" systemItem="action" id="dgO-a0-6mG">
+                                <connections>
+                                    <action selector="initBarChart:" destination="BYZ-38-t0r" id="DrP-cS-uDO"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem style="done" systemItem="action" id="vt5-fb-M3M">
+                                <connections>
+                                    <action selector="initPieChart:" destination="BYZ-38-t0r" id="dMi-N5-Mwb"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>

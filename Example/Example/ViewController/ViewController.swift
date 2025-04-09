@@ -16,16 +16,24 @@ final class ViewController: UIViewController {
     @IBOutlet weak var chartView: MyChartJS!
     
     private var chartValues: [WWWebView.ChartJS.ChartValue] = [
-        (key: "Red", value: 15.0, color: nil),
+        (key: "Red", value: 15.0, color: .red.withAlphaComponent(0.8)),
         (key: "Blue", value: 10.0, color: nil),
         (key: "Yellow", value: 5.5, color: .yellow),
         (key: "Green", value: 8.0, color: .green.withAlphaComponent(0.3)),
         (key: "Purple", value: 12.0, color: .purple.withAlphaComponent(0.5)),
         (key: "Orange", value: 10.4, color: .orange.withAlphaComponent(0.7)),
     ]
-        
-    @IBAction func initChart(_ sender: UIBarButtonItem) {
-        chartView.configure(delegate: self)
+    
+    @IBAction func initBarChart(_ sender: UIBarButtonItem) {
+        chartView.configure(delegate: self, chartType: .bar)
+    }
+    
+    @IBAction func initPieChart(_ sender: UIBarButtonItem) {
+        chartView.configure(delegate: self, chartType: .pie)
+    }
+    
+    @IBAction func initDoughnutChart(_ sender: UIBarButtonItem) {
+        chartView.configure(delegate: self, chartType: .doughnut)
     }
     
     @IBAction func reloadData(_ sender: UIBarButtonItem) {
@@ -63,7 +71,7 @@ extension ViewController: WWWebView.ChartJS.Delegate {
         case .success(let event):
             switch event {
             case .itemTouched(let indexPath): title = chartValues[indexPath.row].key
-            case .orientationChange: view.reload()
+            case .orientationChange: view.resize()
             }
         }
     }

@@ -22,7 +22,6 @@ extension WWWebView {
         public weak var delegate: Delegate?
         
         private var colorHexString = "#00FFFF66"
-        private var isUseGrid = true
         private var chartType: ChartType = .bar
         
         override public init(frame: CGRect) {
@@ -47,7 +46,7 @@ public extension WWWebView.ChartJS {
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         guard let chartValues = delegate?.chartValues(view: self) else { return }
-        initChart(with: webView, chartType: chartType, isUseGrid: isUseGrid, chartValues: chartValues)
+        initChart(with: webView, chartType: chartType, chartValues: chartValues)
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
@@ -63,23 +62,22 @@ public extension WWWebView.ChartJS {
     ///   - delegate: Delegate?
     ///   - chartType: 圖表樣式
     ///   - defaultColor: 預設顏色
-    func configure(delegate: Delegate?, chartType: ChartType = .bar, defaultColor: UIColor? = nil, isUseGrid: Bool = true) {
+    func configure(delegate: Delegate?, chartType: ChartType = .bar, defaultColor: UIColor? = nil) {
         
         if let defaultColor { colorHexString = defaultColor._hexString() ?? "#00FFFF66" }
         
         self.delegate = delegate
         self.chartType = chartType
-        self.isUseGrid = isUseGrid
         
         loadHTML("index.html")
     }
-        
+    
     /// [重新載入資料](https://chartjs.bootcss.com/docs/getting-started/installation.html)
     func reloadData() {
         reloadDataAction(webView: webView)
     }
     
-    /// 重新載入網頁
+    /// [重新載入網頁](https://www.chartjs.org/docs/latest/charts/doughnut.html)
     func reload() {
         webView.reload()
         delegate?.chartViewStatus(self, result: .success(.reload))
@@ -128,19 +126,17 @@ private extension WWWebView.ChartJS {
     /// - Parameters:
     ///   - webView: WKWebView
     ///   - chartType: 圖表樣式
-    ///   - isUseGrid: 是否使用框線
     ///   - chartValues: 數值
-    func initChart(with webView: WKWebView, chartType: ChartType, isUseGrid: Bool, chartValues: [ChartValue]) {
-        initChart(webView: webView, chartType: chartType.rawValue, isUseGrid: isUseGrid, chartValues: chartValues)
+    func initChart(with webView: WKWebView, chartType: ChartType, chartValues: [ChartValue]) {
+        initChart(webView: webView, chartType: chartType.rawValue, chartValues: chartValues)
     }
     
     /// 初始化圖表
     /// - Parameters:
     ///   - webView: WKWebView
     ///   - chartType: 圖表樣式
-    ///   - isUseGrid: 是否使用框線
     ///   - chartValues: 數值
-    func initChart(webView: WKWebView, chartType: String, isUseGrid: Bool, chartValues: [ChartValue]) {
+    func initChart(webView: WKWebView, chartType: String, chartValues: [ChartValue]) {
         
         let labels = chartValues.map { $0.key }
         let values = chartValues.map { $0.value }
@@ -148,7 +144,7 @@ private extension WWWebView.ChartJS {
         let dataString = values.map { String($0) }.joined(separator: ", ")
         
         let jsCode = """
-            window.initChart('\(chartType)', \(labels), \(isUseGrid))
+            window.initChart('\(chartType)', \(labels))
             window.reloadData(\(labels), [\(dataString)], \(colors))
         """
         

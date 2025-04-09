@@ -5,36 +5,41 @@
  * @param labels - 圖表資料項目
  * @param isUseGrid - 是否使用背景框線
 */
-function initChart(type, labels, isUseGrid) {
+function initChart(type, labels) {
 
     let element = document.getElementById('jsChart');
-    let gridLineWidth = isUseGrid ? 1.0 : 0.0
     
     new Chart(element, {
         type: type,
         data: {
             labels: labels,
             datasets: [{
-                borderWidth: 0
+                borderWidth: 0,
+                hoverOffset: 10
             }]
         },
         options: {
             plugins: {
                 legend: {
                     display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => {
+                            const value = context.raw || 0
+                            const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0)
+                            const percentage = Math.round((value / total) * 100)
+                            return ` ${percentage}% (${value})`
+                        }
+                    }
                 }
             },
-            scales: {
-                x: {
-                    grid: {
-                        lineWidth: gridLineWidth
-                    }
-                },
-                y: {
-                    grid: {
-                        lineWidth: gridLineWidth,
-                        beginAtZero: true
-                    }
+            layout: {
+                padding: {
+                    top: 10,
+                    right: 10,
+                    bottom: 10,
+                    left: 10
                 }
             },
             onClick: (event, items) => {
@@ -59,7 +64,7 @@ function initChart(type, labels, isUseGrid) {
 */
 function reloadData(labels, data, backgroundColor) {
 
-    let jsChart = Chart.getChart('jsChart')
+    const jsChart = Chart.getChart('jsChart')
 
     jsChart.data.labels = labels
     jsChart.data.datasets[0].data = data
@@ -73,7 +78,7 @@ function reloadData(labels, data, backgroundColor) {
  * @description 重新設定畫面大小
 */
 function resize() {
-    let jsChart = Chart.getChart('jsChart')
+    const jsChart = Chart.getChart('jsChart')
     jsChart.resize()
 }
 
@@ -92,7 +97,7 @@ function notificationOrientationChange() {
 */
 function mobileProtocol(src) {
 
-    let iframe = document.createElement('iframe')
+    const iframe = document.createElement('iframe')
 
     iframe.src = src
     iframe.style.display = "none"
