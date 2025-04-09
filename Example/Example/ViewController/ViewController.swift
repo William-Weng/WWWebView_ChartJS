@@ -25,6 +25,7 @@ final class ViewController: UIViewController {
     ]
     
     @IBAction func initBarChart(_ sender: UIBarButtonItem) {
+        chartView.isScrollEnabled = false
         chartView.configure(delegate: self, chartType: .bar)
     }
     
@@ -70,8 +71,11 @@ extension ViewController: WWWebView.ChartJS.Delegate {
         case .failure(let error): print(error)
         case .success(let event):
             switch event {
-            case .itemTouched(let indexPath): title = chartValues[indexPath.row].key
-            case .orientationChange: view.resize()
+            case .itemTouched(let indexPath):
+                title = chartValues[indexPath.row].key
+            case .resize(let isLandscape):
+                view.isScrollEnabled = isLandscape
+                view.resize()
             }
         }
     }

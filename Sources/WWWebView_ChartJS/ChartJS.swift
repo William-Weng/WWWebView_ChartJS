@@ -21,6 +21,8 @@ extension WWWebView {
         
         public weak var delegate: Delegate?
         
+        public var isScrollEnabled = true { didSet { webView.scrollView.isScrollEnabled = isScrollEnabled }}
+        
         private var colorHexString = "#00FFFF66"
         private var chartType: ChartType = .bar
         
@@ -171,7 +173,7 @@ private extension WWWebView.ChartJS {
         let values = chartValues.map { $0.value }
         let colors = chartValues.map { $0.color?._hexString() ?? colorHexString }
         let dataString = values.map { String($0) }.joined(separator: ", ")
-
+        
         let jsCode = """
             window.reloadData(\(labels), [\(dataString)], \(colors))
         """
@@ -228,15 +230,9 @@ private extension WWWebView.ChartJS {
         
         switch (scheme, host) {
         case (.app, .itemTouched): return itemTouchedAction(with: url)
-        case (.app, .orientationChange): return orientationChangeAction()
+        case (.app, .resize): return resizeAction()
         }
         
-        return .cancel
-    }
-    
-    /// 畫面旋轉事件處理 => app://itemTouched/${section},${row}
-    func orientationChangeAction() -> WKNavigationActionPolicy {
-        delegate?.chartViewEvent(self, result: .success(.orientationChange))
         return .cancel
     }
     
@@ -259,6 +255,15 @@ private extension WWWebView.ChartJS {
         
         let indexPath = IndexPath(row: row, section: section)
         delegate?.chartViewEvent(self, result: .success(.itemTouched(indexPath)))
+        
+        return .cancel
+    }
+    
+    /// 畫面尺寸改變事件處理 => app://resize
+    func resizeAction() -> WKNavigationActionPolicy {
+        
+        let isLandscape = UIDevice.current._checkLandscape()
+        delegate?.chartViewEvent(self, result: .success(.resize(isLandscape)))
         
         return .cancel
     }

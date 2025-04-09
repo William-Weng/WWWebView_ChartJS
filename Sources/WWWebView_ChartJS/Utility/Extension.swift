@@ -41,6 +41,21 @@ public extension UIColor {
     }
 }
 
+// MARK: - UIDevice
+public extension UIDevice {
+    
+    /// 測試手機畫面是否是橫向的
+    /// - Returns: Bool
+    func _checkLandscape() -> Bool {
+        switch orientation {
+        case .portrait, .portraitUpsideDown: return false
+        case .landscapeLeft, .landscapeRight: return true
+        case .unknown, .faceUp, .faceDown: return false
+        @unknown default: return false
+        }
+    }
+}
+
 // MARK: - WKWebView
 public extension WKWebView {
     

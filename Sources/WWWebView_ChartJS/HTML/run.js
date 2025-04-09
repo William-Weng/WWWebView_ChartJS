@@ -83,11 +83,11 @@ function resize() {
 }
 
 /**
- * @function notificationOrientationChange
- * @description 通知畫面旋轉
+ * @function notificationResize
+ * @description 通知畫面尺寸改變
 */
-function notificationOrientationChange() {
-    mobileProtocol("app://orientationChange")
+function notificationResize() {
+    mobileProtocol(`app://resize`)
 }
 
 /**
@@ -107,7 +107,15 @@ function mobileProtocol(src) {
 }
 
 window.onload = () => {
-    window.addEventListener('orientationchange', notificationOrientationChange);
+    
+    window.addEventListener('resize', notificationResize)
+
+    (function() {
+        let style = document.createElement('style')
+        style.innerHTML = `*:not(input,textarea),*:focus:not(input,textarea){-webkit-user-select:none;-webkit-touch-callout:none;}`;
+        document.head.appendChild(style)
+        return true
+    }())
 }
 
 window.initChart = initChart

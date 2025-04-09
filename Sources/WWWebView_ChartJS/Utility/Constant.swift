@@ -45,7 +45,7 @@ public extension WWWebView.ChartJS {
     /// 自定義的事件名稱 => app://<event>/<value>
     enum Event {
         case itemTouched(_ indexPath: IndexPath)    // 圖表項目被點 => app://itemTouched/${section},${row}
-        case orientationChange                      // 手機畫面旋轉 => app://orientationChange/
+        case resize(_ isLandscape: Bool)            // 手機尺寸改變 => app://resize
     }
     
     /// 自定義功能代號 => app://<event>/<value>
@@ -56,6 +56,6 @@ public extension WWWebView.ChartJS {
     /// 自定義的事件名稱 => app://<event>/<value>
     enum CustomUrlHost: String {
         case itemTouched
-        case orientationChange
+        case resize
     }
 }
