@@ -11,7 +11,7 @@
 ### [Installation with Swift Package Manager](https://medium.com/彼得潘的-swift-ios-app-開發問題解答集/使用-spm-安裝第三方套件-xcode-11-新功能-2c4ffcf85b4b)
 ```
 dependencies: [
-    .package(url: "https://github.com/William-Weng/WWWebView_ChartJS.git", .upToNextMajor(from: "0.6.2"))
+    .package(url: "https://github.com/William-Weng/WWWebView_ChartJS.git", .upToNextMajor(from: "0.6.3"))
 ]
 ```
 
@@ -26,7 +26,7 @@ dependencies: [
 ## WWWebView.ChartJS.Delegate
 |函式|功能|
 |-|-|
-|chartValues(view:)|取得表格數據|
+|chartValuesArray(view:)|取得表格數據|
 |chartViewStatus(_ view:result:)|表格狀態|
 |chartViewEvent(_ view:result:)|表格事件|
 
@@ -77,8 +77,8 @@ final class ViewController: UIViewController {
 
 extension ViewController: WWWebView.ChartJS.Delegate {
     
-    func chartValues(view: WWWebView.ChartJS) -> [WWWebView.ChartJS.ChartValue] {
-        return chartValues
+    func chartValuesArray(view: WWWebView.ChartJS) -> [[WWWebView.ChartJS.ChartValue]] {
+        return [chartValues]
     }
         
     func chartViewStatus(_ view: WWWebView.ChartJS, result: Result<WWWebView.ChartJS.Status, Error>) {

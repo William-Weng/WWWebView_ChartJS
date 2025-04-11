@@ -47,8 +47,8 @@ extension WWWebView.ChartJS: WKNavigationDelegate {}
 public extension WWWebView.ChartJS {
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        guard let chartValues = delegate?.chartValues(view: self) else { return }
-        initChart(with: webView, chartType: chartType, chartValues: chartValues)
+        guard let chartValuesArray = delegate?.valuesArray(chartView: self) else { return }
+        initChart(with: webView, chartType: chartType, chartValuesArray: chartValuesArray)
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
@@ -128,8 +128,8 @@ private extension WWWebView.ChartJS {
     /// - Parameters:
     ///   - webView: WKWebView
     ///   - chartType: 圖表樣式
-    ///   - chartValues: 數值
-    func initChart(with webView: WKWebView, chartType: ChartType, chartValues: [ChartValue]) {
+    ///   - chartValuesArray: [數值]
+    func initChart(with webView: WKWebView, chartType: ChartType, chartValuesArray: [[ChartValue]]) {
         
         let borderWidth: Double
         let isDisplayGrid: Bool
@@ -141,26 +141,22 @@ private extension WWWebView.ChartJS {
         case .line(let width): borderWidth = width; isDisplayGrid = true
         }
         
-        initChart(webView: webView, chartType: chartType.value(), chartValues: chartValues, borderWidth: borderWidth, isDisplayGrid: isDisplayGrid)
+        initChart(webView: webView, chartType: chartType.value(), chartValuesArray: chartValuesArray, borderWidth: borderWidth, isDisplayGrid: isDisplayGrid)
     }
     
     /// 初始化圖表
     /// - Parameters:
     ///   - webView: WKWebView
     ///   - chartType: 圖表樣式
-    ///   - chartValues: 數值
+    ///   - chartValuesArray: [數值]
     ///   - borderWidth: 線寬
     ///   - isDisplayGrid: 是否要顯示坐標線
-    func initChart(webView: WKWebView, chartType: String, chartValues: [ChartValue], borderWidth: Double, isDisplayGrid: Bool) {
+    func initChart(webView: WKWebView, chartType: String, chartValuesArray: [[ChartValue]], borderWidth: Double, isDisplayGrid: Bool) {
         
-        let labels = chartValues.map { $0.key }
-        let values = chartValues.map { $0.value }
-        let colors = chartValues.map { $0.color?._hexString() ?? colorHexString }
-        let dataString = values.map { String($0) }.joined(separator: ", ")
+        guard let labels = chartValuesArray.first?.map({ (key, _ , _) in return key }) else { return }
         
         let jsCode = """
-            window.initChart('\(chartType)', \(labels), \(borderWidth))
-            window.reloadData(\(labels), [\(dataString)], \(colors))
+            window.initChart('\(chartType)', \(labels), \(borderWidth), \(chartValuesArray.count))
             window.displayGrid(\(isDisplayGrid))
         """
         
@@ -172,7 +168,9 @@ private extension WWWebView.ChartJS {
             
             switch result {
             case .failure(let error): this.delegate?.chartViewStatus(this, result: .failure(error))
-            case .success(let value): this.delegate?.chartViewStatus(this, result: .success(.initChart(value)))
+            case .success(let value):
+                this.delegate?.chartViewStatus(this, result: .success(.initChart(value)))
+                this.reloadDataAction(webView: webView)
             }
         }
     }
@@ -181,15 +179,15 @@ private extension WWWebView.ChartJS {
     /// - Parameter webView: WKWebView
     func reloadDataAction(webView: WKWebView) {
         
-        guard let chartValues = delegate?.chartValues(view: self) else { return }
-        
-        let labels = chartValues.map { $0.key }
-        let values = chartValues.map { $0.value }
-        let colors = chartValues.map { $0.color?._hexString() ?? colorHexString }
-        let dataString = values.map { String($0) }.joined(separator: ", ")
-        
+        guard let chartValuesArray = delegate?.valuesArray(chartView: self),
+              let labels = chartValuesArray.first?.map({ (key, _ , _) in return key })
+        else {
+            return
+        }
+
+        let itemValue = parseItemValues(chartValuesArray: chartValuesArray)
         let jsCode = """
-            window.reloadData(\(labels), [\(dataString)], \(colors))
+            window.reloadData(\(labels), [\(itemValue.datasString)], [\(itemValue.colorsString)])
         """
         
         webView._evaluateJavaScript(script: jsCode) { [weak self] result in
@@ -255,6 +253,8 @@ private extension WWWebView.ChartJS {
     /// - Returns: WKNavigationActionPolicy
     func itemTouchedAction(with url: URL) -> WKNavigationActionPolicy {
         
+        print(url)
+        
         let component = url.lastPathComponent
         let array = component.split(separator: ",")
         
@@ -280,5 +280,36 @@ private extension WWWebView.ChartJS {
         delegate?.chartViewEvent(self, result: .success(.resize(isLandscape)))
         
         return .cancel
+    }
+}
+
+// MARK: - 小工具
+private extension WWWebView.ChartJS {
+    
+    /// 將Swift的資料 => Chart.js的參數文字
+    /// - Parameter chartValuesArray: [[ChartValue]]
+    /// - Returns: (datasString: String, colorsString: String)
+    func parseItemValues(chartValuesArray: [[ChartValue]]) -> (datasString: String, colorsString: String) {
+        
+        let colorsString: String
+        let datasString: String
+
+        var colors: [String] = []
+        var datas: [String] = []
+        
+        chartValuesArray.map { chartValues in
+            
+            let values = chartValues.map { $0.value }
+            let _colors = chartValues.map { $0.color?._hexString() ?? colorHexString }
+            let _datas = values.map { String($0) }.joined(separator: ", ")
+            
+            colors.append("\(_colors)")
+            datas.append("[\(_datas)]")
+        }
+        
+        colorsString = colors.map { String($0) }.joined(separator: ", ")
+        datasString = datas.map { String($0) }.joined(separator: ", ")
+
+        return (datasString: datasString, colorsString: colorsString)
     }
 }

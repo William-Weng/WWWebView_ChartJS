@@ -53,10 +53,10 @@ final class ViewController: UIViewController {
 // MARK: - WWWebView.ChartJS.Delegate
 extension ViewController: WWWebView.ChartJS.Delegate {
     
-    func chartValues(view: WWWebView.ChartJS) -> [WWWebView.ChartJS.ChartValue] {
-        return chartValues
+    func valuesArray(chartView: WWWebView_ChartJS.WWWebView.ChartJS) -> [[WWWebView_ChartJS.WWWebView.ChartJS.ChartValue]] {
+        return [chartValues]
     }
-        
+    
     func chartViewStatus(_ view: WWWebView.ChartJS, result: Result<WWWebView.ChartJS.Status, Error>) {
         
         switch result {

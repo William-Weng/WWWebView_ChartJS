@@ -11,12 +11,12 @@ import UIKit
 public extension WWWebView.ChartJS {
     
     protocol Delegate: NSObjectProtocol {
-        
+                
         /// 取得表格數據
         /// - Parameter view: WWWebView.ChartJS
         /// - Returns: [ChartValue]
-        func chartValues(view: WWWebView.ChartJS) -> [ChartValue]
-                
+        func valuesArray(chartView: WWWebView.ChartJS) -> [[WWWebView.ChartJS.ChartValue]]
+        
         /// 表格狀態
         /// - Parameters:
         ///   - view: WWWebView.ChartJS
