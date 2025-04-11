@@ -158,12 +158,12 @@ window.onload = () => {
 
     window.addEventListener('resize', _notificationResize_)
 
-        (function () {
-            let style = document.createElement('style')
-            style.innerHTML = `*:not(input,textarea),*:focus:not(input,textarea){-webkit-user-select:none;-webkit-touch-callout:none;}`;
-            document.head.appendChild(style)
-            return true
-        }())
+    (function () {
+        let style = document.createElement('style')
+        style.innerHTML = `*:not(input,textarea),*:focus:not(input,textarea){-webkit-user-select:none;-webkit-touch-callout:none;}`;
+        document.head.appendChild(style)
+        return true
+    }())
 }
 
 window.initChart = initChart
