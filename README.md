@@ -96,7 +96,7 @@ extension ViewController: WWWebView.ChartJS.Delegate {
         case .success(let event):
             switch event {
             case .itemTouched(let indexPath): title = chartValues[indexPath.row].key
-            case .resize(let isLandscape): view.resize(); view.isScrollEnabled = isLandscape
+            case .resize(let isLandscape): DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { view.resize(); view.isScrollEnabled = isLandscape }
             }
         }
     }

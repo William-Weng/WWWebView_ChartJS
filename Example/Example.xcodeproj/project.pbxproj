@@ -21,7 +21,8 @@
 		81A9EB382DA6672700969BF9 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81A9EB372DA6672700969BF9 /* WWWebView_ChartJS */; };
 		81BFAC8D2DA8B86D00D1CD54 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81BFAC8C2DA8B86D00D1CD54 /* WWWebView_ChartJS */; };
 		81BFAC932DA8B9CD00D1CD54 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81BFAC922DA8B9CD00D1CD54 /* WWWebView_ChartJS */; };
-		81BFAC962DA8EABE00D1CD54 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81BFAC952DA8EABE00D1CD54 /* WWWebView_ChartJS */; };
+		81BFAC9C2DA8EE7600D1CD54 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81BFAC9B2DA8EE7600D1CD54 /* WWWebView_ChartJS */; };
+		81BFAC9F2DA8EE8900D1CD54 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81BFAC9E2DA8EE8900D1CD54 /* WWWebView_ChartJS */; };
 		81D0D67D2DA4C13C009AE0E0 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81D0D67C2DA4C13C009AE0E0 /* WWWebView_ChartJS */; };
 		81F23EC62DA60561006F5B51 /* WWWebView_ChartJS in Frameworks */ = {isa = PBXBuildFile; productRef = 81F23EC52DA60561006F5B51 /* WWWebView_ChartJS */; };
 /* End PBXBuildFile section */
@@ -43,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81BFAC9F2DA8EE8900D1CD54 /* WWWebView_ChartJS in Frameworks */,
 				81F23EC62DA60561006F5B51 /* WWWebView_ChartJS in Frameworks */,
 				81A9EB232DA646AD00969BF9 /* WWWebView_ChartJS in Frameworks */,
 				81A9EB262DA6534600969BF9 /* WWWebView_ChartJS in Frameworks */,
@@ -51,7 +53,7 @@
 				81A9EB322DA658D400969BF9 /* WWWebView_ChartJS in Frameworks */,
 				81D0D67D2DA4C13C009AE0E0 /* WWWebView_ChartJS in Frameworks */,
 				81BFAC8D2DA8B86D00D1CD54 /* WWWebView_ChartJS in Frameworks */,
-				81BFAC962DA8EABE00D1CD54 /* WWWebView_ChartJS in Frameworks */,
+				81BFAC9C2DA8EE7600D1CD54 /* WWWebView_ChartJS in Frameworks */,
 				81A9EB382DA6672700969BF9 /* WWWebView_ChartJS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -164,7 +166,8 @@
 				81A9EB372DA6672700969BF9 /* WWWebView_ChartJS */,
 				81BFAC8C2DA8B86D00D1CD54 /* WWWebView_ChartJS */,
 				81BFAC922DA8B9CD00D1CD54 /* WWWebView_ChartJS */,
-				81BFAC952DA8EABE00D1CD54 /* WWWebView_ChartJS */,
+				81BFAC9B2DA8EE7600D1CD54 /* WWWebView_ChartJS */,
+				81BFAC9E2DA8EE8900D1CD54 /* WWWebView_ChartJS */,
 			);
 			productName = Example;
 			productReference = 817567F82CA2C2B400B24577 /* Example.app */;
@@ -195,7 +198,7 @@
 			);
 			mainGroup = 817567EF2CA2C2B400B24577;
 			packageReferences = (
-				81BFAC942DA8EABE00D1CD54 /* XCRemoteSwiftPackageReference "WWWebView_ChartJS" */,
+				81BFAC9D2DA8EE8900D1CD54 /* XCRemoteSwiftPackageReference "WWWebView_ChartJS" */,
 			);
 			productRefGroup = 817567F92CA2C2B400B24577 /* Products */;
 			projectDirPath = "";
@@ -462,12 +465,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		81BFAC942DA8EABE00D1CD54 /* XCRemoteSwiftPackageReference "WWWebView_ChartJS" */ = {
+		81BFAC9D2DA8EE8900D1CD54 /* XCRemoteSwiftPackageReference "WWWebView_ChartJS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/William-Weng/WWWebView_ChartJS";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.6.3;
+				minimumVersion = 0.7.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -501,9 +504,13 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = WWWebView_ChartJS;
 		};
-		81BFAC952DA8EABE00D1CD54 /* WWWebView_ChartJS */ = {
+		81BFAC9B2DA8EE7600D1CD54 /* WWWebView_ChartJS */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 81BFAC942DA8EABE00D1CD54 /* XCRemoteSwiftPackageReference "WWWebView_ChartJS" */;
+			productName = WWWebView_ChartJS;
+		};
+		81BFAC9E2DA8EE8900D1CD54 /* WWWebView_ChartJS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 81BFAC9D2DA8EE8900D1CD54 /* XCRemoteSwiftPackageReference "WWWebView_ChartJS" */;
 			productName = WWWebView_ChartJS;
 		};
 		81D0D67C2DA4C13C009AE0E0 /* WWWebView_ChartJS */ = {
