@@ -27,10 +27,22 @@ public extension WWWebView.ChartJS {
 public extension WWWebView.ChartJS {
     
     /// 表格樣式
-    enum ChartType: String {
+    enum ChartType {
+        
         case bar                                    // 柱狀圖
-        case pie                                    // 圓餅圖
-        case doughnut                               // 甜甜圈圖
+        case pie(_ gap: Double)                     // 圓餅圖
+        case doughnut(_ gap: Double)                // 甜甜圈圖
+        case line(_ borderWidth: Double)            // 折線圖
+        
+        func value() -> String {
+            
+            switch self {
+            case .bar: return "bar"
+            case .pie: return "pie"
+            case .doughnut: return "doughnut"
+            case .line: return "line"
+            }
+        }
     }
     
     /// 自定義的狀態名稱

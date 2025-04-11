@@ -3,22 +3,29 @@
  * @description 初始化圖表
  * @param type - 圖表類型
  * @param labels - 圖表資料項目
- * @param isUseGrid - 是否使用背景框線
+ * @param borderWidth - 線寬 / 間隔
 */
-function initChart(type, labels) {
+function initChart(type, labels, borderWidth) {
 
     let element = document.getElementById('jsChart');
-    
+
     new Chart(element, {
         type: type,
         data: {
             labels: labels,
             datasets: [{
-                borderWidth: 0,
+                borderWidth: borderWidth,
+                pointRadius: 4,
+                tension: 0.3,
                 hoverOffset: 10
             }]
         },
         options: {
+            scales: {
+                y: {
+                    min: 0
+                }
+            },
             plugins: {
                 legend: {
                     display: false
@@ -44,14 +51,14 @@ function initChart(type, labels) {
             },
             onClick: (event, items) => {
                 if (items.length > 0) {
-                    let row = items[0].index
-                    let section = items[0].datasetIndex
+                    const row = items[0].index
+                    const section = items[0].datasetIndex
                     mobileProtocol(`app://itemTouched/${section},${row}`)
                 }
             }
         }
     })
-    
+
     return true
 }
 
@@ -64,13 +71,26 @@ function initChart(type, labels) {
 */
 function reloadData(labels, data, backgroundColor) {
 
-    const jsChart = Chart.getChart('jsChart')
+    let myChart = Chart.getChart('jsChart')
 
-    jsChart.data.labels = labels
-    jsChart.data.datasets[0].data = data
+    myChart.data.labels = labels
+    myChart.data.datasets[0].data = data
     
-    if (backgroundColor != undefined) { jsChart.data.datasets[0].backgroundColor = backgroundColor }
-    jsChart.update()
+    if (backgroundColor != undefined) { myChart.data.datasets[0].backgroundColor = backgroundColor }
+    myChart.update()
+}
+
+/**
+ * @function displayGrid
+ * @description 是否顯示網格線
+ * @param isDisplay - 是否顯示
+*/
+function displayGrid(isDisplay) {
+
+    let myChart = Chart.getChart('jsChart')
+
+    myChart.options.scales = isDisplay ? { y: { min: 0 }} : {}
+    myChart.update()
 }
 
 /**
@@ -78,8 +98,8 @@ function reloadData(labels, data, backgroundColor) {
  * @description 重新設定畫面大小
 */
 function resize() {
-    const jsChart = Chart.getChart('jsChart')
-    jsChart.resize()
+    let myChart = Chart.getChart('jsChart')
+    myChart.resize()
 }
 
 /**
@@ -97,7 +117,7 @@ function notificationResize() {
 */
 function mobileProtocol(src) {
 
-    const iframe = document.createElement('iframe')
+    let iframe = document.createElement('iframe')
 
     iframe.src = src
     iframe.style.display = "none"
@@ -121,3 +141,4 @@ window.onload = () => {
 window.initChart = initChart
 window.reloadData = reloadData
 window.resize = resize
+window.displayGrid = displayGrid

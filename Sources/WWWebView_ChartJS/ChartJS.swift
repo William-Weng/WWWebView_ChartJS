@@ -130,7 +130,18 @@ private extension WWWebView.ChartJS {
     ///   - chartType: 圖表樣式
     ///   - chartValues: 數值
     func initChart(with webView: WKWebView, chartType: ChartType, chartValues: [ChartValue]) {
-        initChart(webView: webView, chartType: chartType.rawValue, chartValues: chartValues)
+        
+        let borderWidth: Double
+        let isDisplayGrid: Bool
+
+        switch chartType {
+        case .bar: borderWidth = 0.0; isDisplayGrid = true
+        case .pie(let gap): borderWidth = gap; isDisplayGrid = false
+        case .doughnut(let gap): borderWidth = gap; isDisplayGrid = false
+        case .line(let width): borderWidth = width; isDisplayGrid = true
+        }
+        
+        initChart(webView: webView, chartType: chartType.value(), chartValues: chartValues, borderWidth: borderWidth, isDisplayGrid: isDisplayGrid)
     }
     
     /// 初始化圖表
@@ -138,7 +149,9 @@ private extension WWWebView.ChartJS {
     ///   - webView: WKWebView
     ///   - chartType: 圖表樣式
     ///   - chartValues: 數值
-    func initChart(webView: WKWebView, chartType: String, chartValues: [ChartValue]) {
+    ///   - borderWidth: 線寬
+    ///   - isDisplayGrid: 是否要顯示坐標線
+    func initChart(webView: WKWebView, chartType: String, chartValues: [ChartValue], borderWidth: Double, isDisplayGrid: Bool) {
         
         let labels = chartValues.map { $0.key }
         let values = chartValues.map { $0.value }
@@ -146,8 +159,9 @@ private extension WWWebView.ChartJS {
         let dataString = values.map { String($0) }.joined(separator: ", ")
         
         let jsCode = """
-            window.initChart('\(chartType)', \(labels))
+            window.initChart('\(chartType)', \(labels), \(borderWidth))
             window.reloadData(\(labels), [\(dataString)], \(colors))
+            window.displayGrid(\(isDisplayGrid))
         """
         
         webView.isHidden = false
@@ -212,13 +226,13 @@ private extension WWWebView.ChartJS {
 // MARK: - 圖表功能
 private extension WWWebView.ChartJS {
     
-    /// 處理點擊的數據回傳
+    /// 處理自定義事件
     /// - Parameters:
     ///   - webView: WKWebView
     ///   - navigationAction: WKNavigationAction
     /// - Returns: WKNavigationActionPolicy
     func webViewAction(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
-        
+                
         guard let url = navigationAction.request.url,
               let urlScheme = url.scheme,
               let urlHost = url.host,

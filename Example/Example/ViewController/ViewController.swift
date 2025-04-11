@@ -30,11 +30,11 @@ final class ViewController: UIViewController {
     }
     
     @IBAction func initPieChart(_ sender: UIBarButtonItem) {
-        chartView.configure(delegate: self, chartType: .pie)
+        chartView.configure(delegate: self, chartType: .line(1.0))
     }
     
     @IBAction func initDoughnutChart(_ sender: UIBarButtonItem) {
-        chartView.configure(delegate: self, chartType: .doughnut)
+        chartView.configure(delegate: self, chartType: .doughnut(5.0))
     }
     
     @IBAction func reloadData(_ sender: UIBarButtonItem) {
@@ -71,11 +71,8 @@ extension ViewController: WWWebView.ChartJS.Delegate {
         case .failure(let error): print(error)
         case .success(let event):
             switch event {
-            case .itemTouched(let indexPath):
-                title = chartValues[indexPath.row].key
-            case .resize(let isLandscape):
-                view.isScrollEnabled = isLandscape
-                view.resize()
+            case .itemTouched(let indexPath): title = chartValues[indexPath.row].key
+            case .resize(let isLandscape): view.resize(); view.isScrollEnabled = isLandscape
             }
         }
     }
